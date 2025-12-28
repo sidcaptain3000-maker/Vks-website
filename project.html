@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details | VKS Organization</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .project-hero {
+            height: 60vh;
+            position: relative;
+            background-color: var(--surface-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--text-primary);
+        }
+
+        .project-hero-content h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+
+        .project-hero-content p {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+        }
+
+        .gallery-section {
+            padding: 80px 0;
+            min-height: 50vh;
+        }
+
+        .gallery-section .container {
+            max-width: 95%;
+        }
+
+        .gallery-section-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            margin-bottom: 30px;
+            margin-top: 50px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--accent-color);
+            text-align: center;
+        }
+
+        .gallery-section-title:first-child {
+            margin-top: 0;
+        }
+
+        .gallery-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+        }
+
+        .gallery-item {
+            flex: 0 0 calc((100% - 60px) / 3);
+            max-width: calc((100% - 60px) / 3);
+            height: 400px;
+            overflow: hidden;
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-item {
+            cursor: pointer;
+        }
+
+        /* Lightbox Styles */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: hidden;
+        }
+
+        .lightbox-image {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+            transform-origin: center center;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            z-index: 10001;
+            background: rgba(0, 0, 0, 0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .lightbox-close:hover {
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .lightbox-controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 10001;
+        }
+
+        .lightbox-btn {
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+            font-weight: 600;
+        }
+
+        .lightbox-btn:hover {
+            background: white;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            padding: 20px 15px;
+            cursor: pointer;
+            font-size: 24px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+            font-weight: bold;
+            z-index: 10001;
+        }
+
+        .lightbox-nav:hover {
+            background: white;
+        }
+
+        .lightbox-prev {
+            left: 30px;
+        }
+
+        .lightbox-next {
+            right: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container nav-full">
+            <a href="index.html" class="logo-group">
+                <div class="logo-main">
+                    <span class="text-vks">VKS</span>
+                    <span class="text-org">Organization</span>
+                </div>
+                <div class="logo-tagline">Blueprints to Brilliance</div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="nav-home-icon">&#8962;</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Project Hero -->
+    <header class="project-hero">
+        <div class="container project-hero-content">
+            <h1 id="project-title">Loading...</h1>
+            <p id="project-category"></p>
+        </div>
+    </header>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section">
+        <div class="container" id="gallery-container">
+            <div class="gallery-grid" id="gallery-grid">
+                <!-- Images will be injected here if simple list -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" id="lightbox-close">&times;</span>
+        <button class="lightbox-nav lightbox-prev" id="lightbox-prev">&lt;</button>
+        <button class="lightbox-nav lightbox-next" id="lightbox-next">&gt;</button>
+        <div class="lightbox-content">
+            <img src="" alt="" class="lightbox-image" id="lightbox-image">
+        </div>
+        <div class="lightbox-controls">
+            <button class="lightbox-btn" id="zoom-in">Zoom In (+)</button>
+            <button class="lightbox-btn" id="zoom-out">Zoom Out (-)</button>
+            <button class="lightbox-btn" id="reset-zoom">Reset</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h3><span class="text-vks">VKS</span> <span class="text-org">Organization</span></h3>
+                <p>Blueprints to Brilliance</p>
+            </div>
+            <div class="footer-copyright">
+                <p>&copy; 2025 VKS Organization. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/lenis@1.0.45/dist/lenis.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Inline logic for project page to load separate content
+
+        const projectsData = {
+            'baidyanath': {
+                title: 'Baidynath Siddhayu',
+                category: 'COMMERCIAL OFFICE',
+                sections: [
+                    {
+                        title: 'Exterior',
+                        images: [
+                            'assets/baidyanath_ext_seq_1.jpg',
+                            'assets/baidyanath_ext_seq_2.jpg',
+                            'assets/baidyanath_ext_seq_3.jpg'
+                        ]
+                    },
+                    {
+                        title: 'Reception Area',
+                        images: [
+                            'assets/baidyanath_rec_1.jpg',
+                            'assets/baidyanath_rec_2.jpg'
+                        ]
+                    },
+                    {
+                        title: 'Work Station & Wall Art',
+                        images: [
+                            'assets/baidyanath_work_1.jpg',
+                            'assets/baidyanath_work_2.jpg'
+                        ]
+                    },
+                    {
+                        title: 'Conference Room',
+                        images: [
+                            'assets/baidyanath_conf_1.jpg',
+                            'assets/baidyanath_conf_2.jpg',
+                            'assets/baidyanath_conf_3.jpg'
+                        ]
+                    },
+                    {
+                        title: 'Cabins and Meetout area',
+                        images: [
+                            'assets/baidyanath_cabin_2.jpg',
+                            'assets/baidyanath_cabin_3.jpg',
+                            'assets/baidyanath_cabin_4.jpg'
+                        ]
+                    },
+                    {
+                        title: 'Guest Canteen Area',
+                        images: [
+                            'assets/baidyanath_canteen_1.jpg',
+                            'assets/baidyanath_canteen_2.jpg',
+                            'assets/baidyanath_canteen_3.jpg'
+                        ]
+                    },
+                    {
+                        title: 'Factory Worker Canteen Area',
+                        images: [
+                            'assets/baidyanath_staff_1.jpg',
+                            'assets/baidyanath_staff_2.jpg',
+                            'assets/baidyanath_staff_3.jpg'
+                        ]
+                    }
+                ]
+            },
+            'wcl': {
+                title: 'WCL CMD Cabin',
+                category: 'Executive Boardroom',
+                sections: [
+                    {
+                        title: 'Entrance and Passage',
+                        images: [
+                            'assets/wcl_cabin_1.jpg',
+                            'assets/wcl_cabin_2.jpg',
+                            'assets/wcl_cabin_3.jpg'
+                        ]
+                    },
+                    {
+                        title: 'Cabin Entrance',
+                        images: [
+                            'assets/wcl_cabin_entrance_1.jpg',
+                            'assets/wcl_cabin_entrance_2.jpg'
+                        ]
+                    },
+                    {
+                        title: 'Personalised Seating',
+                        images: [
+                            'assets/wcl_seating_1.jpg',
+                            'assets/wcl_seating_2.jpg',
+                            'assets/wcl_seating_3.jpg'
+                        ]
+                    },
+                    {
+                        title: 'CMD Personal Conference',
+                        images: [
+                            'assets/wcl_conf_2.jpg',
+                            'assets/wcl_conf_3.jpg',
+                            'assets/wcl_conf_4.jpg',
+                            'assets/wcl_conf_5.jpg',
+                            'assets/wcl_conf_6.jpg'
+                        ]
+                    },
+                    {
+                        title: 'CMD Seating',
+                        images: [
+                            'assets/wcl_cmd_seating_4.jpg',
+                            'assets/wcl_cmd_seating_5.jpg',
+                            'assets/wcl_cmd_seating_1.jpg',
+                            'assets/wcl_cmd_seating_2.jpg',
+                            'assets/wcl_cmd_seating_3.jpg'
+                        ]
+                    }
+                ]
+            },
+            'apartment': {
+                title: 'CRPF Canteen and Conference Room',
+                category: 'Government',
+                images: ['assets/hero.png']
+            }
+        };
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const projectId = urlParams.get('id');
+
+        if (projectId && projectsData[projectId]) {
+            const project = projectsData[projectId];
+            document.getElementById('project-title').textContent = project.title;
+            document.getElementById('project-category').textContent = project.category;
+
+            const galleryContainer = document.getElementById('gallery-container');
+            const defaultGrid = document.getElementById('gallery-grid');
+
+            if (project.sections) {
+                // If project has defined sections, use them
+                defaultGrid.style.display = 'none'; // Hide default grid
+
+                project.sections.forEach(section => {
+                    // Create Section Title
+                    const title = document.createElement('h3');
+                    title.className = 'gallery-section-title';
+                    title.textContent = section.title;
+                    galleryContainer.appendChild(title);
+
+                    // Create Grid for this section
+                    const grid = document.createElement('div');
+                    grid.className = 'gallery-grid';
+                    // grid.style.gridTemplateColumns = `repeat(${section.images.length}, 1fr)`; // Removed to use CSS default
+
+                    section.images.forEach(imgSrc => {
+                        const item = document.createElement('div');
+                        item.className = 'gallery-item';
+                        item.innerHTML = `<img src="${imgSrc}" alt="${section.title} - ${project.title}">`;
+                        grid.appendChild(item);
+                    });
+
+                    galleryContainer.appendChild(grid);
+                });
+
+            } else if (project.images) {
+                // Fallback for simple image list
+                project.images.forEach(imgSrc => {
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    item.innerHTML = `<img src="${imgSrc}" alt="${project.title}">`;
+                    defaultGrid.appendChild(item);
+                });
+            }
+
+        } else {
+            document.getElementById('project-title').textContent = 'Project Not Found';
+        }
+
+        // Lightbox functionality
+        let currentImageIndex = 0;
+        let allImages = [];
+        let currentZoom = 1;
+
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightbox-image');
+        const lightboxClose = document.getElementById('lightbox-close');
+        const lightboxPrev = document.getElementById('lightbox-prev');
+        const lightboxNext = document.getElementById('lightbox-next');
+        const zoomInBtn = document.getElementById('zoom-in');
+        const zoomOutBtn = document.getElementById('zoom-out');
+        const resetZoomBtn = document.getElementById('reset-zoom');
+        const zoomIndicator = document.getElementById('zoom-indicator');
+
+        let zoomTimeout;
+
+        function showZoomIndicator() {
+            zoomIndicator.textContent = Math.round(currentZoom * 100) + '%';
+            zoomIndicator.classList.add('show');
+            clearTimeout(zoomTimeout);
+            zoomTimeout = setTimeout(() => {
+                zoomIndicator.classList.remove('show');
+            }, 1500);
+        }
+
+        // Collect all images after they're loaded
+        setTimeout(() => {
+            const galleryItems = document.querySelectorAll('.gallery-item img');
+            allImages = Array.from(galleryItems).map(img => img.src);
+
+            // Add click event to all gallery items
+            galleryItems.forEach((img, index) => {
+                img.parentElement.addEventListener('click', () => {
+                    openLightbox(index);
+                });
+            });
+        }, 100);
+
+        function openLightbox(index) {
+            currentImageIndex = index;
+            currentZoom = 1;
+            lightboxImage.src = allImages[index];
+            lightboxImage.style.transform = `scale(${currentZoom})`;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            currentZoom = 1;
+            zoomIndicator.classList.remove('show');
+        }
+
+        function showPrevImage() {
+            currentImageIndex = (currentImageIndex - 1 + allImages.length) % allImages.length;
+            lightboxImage.src = allImages[currentImageIndex];
+            currentZoom = 1;
+            lightboxImage.style.transform = `scale(${currentZoom})`;
+            zoomIndicator.classList.remove('show');
+        }
+
+        function showNextImage() {
+            currentImageIndex = (currentImageIndex + 1) % allImages.length;
+            lightboxImage.src = allImages[currentImageIndex];
+            currentZoom = 1;
+            lightboxImage.style.transform = `scale(${currentZoom})`;
+            zoomIndicator.classList.remove('show');
+        }
+
+        function zoomIn() {
+            currentZoom = Math.min(currentZoom + 0.25, 3);
+            lightboxImage.style.transform = `scale(${currentZoom})`;
+            showZoomIndicator();
+        }
+
+        function zoomOut() {
+            currentZoom = Math.max(currentZoom - 0.25, 0.5);
+            lightboxImage.style.transform = `scale(${currentZoom})`;
+            showZoomIndicator();
+        }
+
+        function resetZoom() {
+            currentZoom = 1;
+            lightboxImage.style.transform = `scale(${currentZoom})`;
+            showZoomIndicator();
+        }
+
+        // Event listeners
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightboxPrev.addEventListener('click', showPrevImage);
+        lightboxNext.addEventListener('click', showNextImage);
+        zoomInBtn.addEventListener('click', zoomIn);
+        zoomOutBtn.addEventListener('click', zoomOut);
+        resetZoomBtn.addEventListener('click', resetZoom);
+
+        // Close on background click
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                closeLightbox();
+            }
+        });
+
+        // Mouse wheel / Touchpad scroll to zoom
+        lightbox.addEventListener('wheel', (e) => {
+            if (!lightbox.classList.contains('active')) return;
+
+            e.preventDefault();
+
+            // Determine zoom direction based on scroll
+            const delta = e.deltaY;
+            const zoomSpeed = 0.1;
+
+            if (delta < 0) {
+                // Scroll up = Zoom in
+                currentZoom = Math.min(currentZoom + zoomSpeed, 3);
+            } else {
+                // Scroll down = Zoom out
+                currentZoom = Math.max(currentZoom - zoomSpeed, 0.5);
+            }
+
+            lightboxImage.style.transform = `scale(${currentZoom})`;
+            showZoomIndicator();
+        }, { passive: false });
+
+        // Touch events for pinch-to-zoom
+        let initialDistance = 0;
+        let initialZoom = 1;
+
+        lightboxImage.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 2) {
+                e.preventDefault();
+                initialDistance = getDistance(e.touches[0], e.touches[1]);
+                initialZoom = currentZoom;
+            }
+        }, { passive: false });
+
+        lightboxImage.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 2) {
+                e.preventDefault();
+                const currentDistance = getDistance(e.touches[0], e.touches[1]);
+                const scale = currentDistance / initialDistance;
+                currentZoom = Math.min(Math.max(initialZoom * scale, 0.5), 3);
+                lightboxImage.style.transform = `scale(${currentZoom})`;
+                showZoomIndicator();
+            }
+        }, { passive: false });
+
+        function getDistance(touch1, touch2) {
+            const dx = touch1.clientX - touch2.clientX;
+            const dy = touch1.clientY - touch2.clientY;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (!lightbox.classList.contains('active')) return;
+
+            switch (e.key) {
+                case 'Escape':
+                    closeLightbox();
+                    break;
+                case 'ArrowLeft':
+                    showPrevImage();
+                    break;
+                case 'ArrowRight':
+                    showNextImage();
+                    break;
+                case '+':
+                case '=':
+                    zoomIn();
+                    break;
+                case '-':
+                case '_':
+                    zoomOut();
+                    break;
+                case '0':
+                    resetZoom();
+                    break;
+            }
+        });
+    </script>
+</body>
+
+</html>
