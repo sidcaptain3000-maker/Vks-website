@@ -141,6 +141,18 @@
             transform-origin: center center;
         }
 
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         .lightbox-close {
             position: absolute;
             top: 20px;
@@ -214,6 +226,38 @@
         .lightbox-next {
             right: 30px;
         }
+
+        .project-logo-text {
+            font-size: 2.5rem !important;
+            /* Larger size */
+            line-height: 1;
+        }
+
+        .project-tagline-text {
+            display: none;
+            /* Hide old tagline rules if present */
+        }
+
+        .logo-icon {
+            height: 100px;
+            /* Increased to 100px */
+            width: auto;
+            margin-right: 15px;
+        }
+
+        .nav-home-icon {
+            font-size: 3rem !important;
+            /* Bigger home button */
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        /* Tighten Navbar */
+        .navbar {
+            padding: 5px 0 !important;
+        }
     </style>
 </head>
 
@@ -221,12 +265,11 @@
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container nav-full">
-            <a href="index.html" class="logo-group">
-                <div class="logo-main">
+            <a href="index.html" class="logo-group" style="flex-direction: row; align-items: center;">
+                <img src="assets/vks_logo_icon.png" alt="Logo" class="logo-icon">
+                <div class="logo-main project-logo-text">
                     <span class="text-vks">VKS</span>
-                    <span class="text-org">Organization</span>
                 </div>
-                <div class="logo-tagline">Blueprints to Brilliance</div>
             </a>
             <ul class="nav-links">
                 <li><a href="index.html" class="nav-home-icon">&#8962;</a></li>
@@ -463,7 +506,7 @@
 
                     section.images.forEach(imgSrc => {
                         const item = document.createElement('div');
-                        item.className = 'gallery-item';
+                        item.className = 'gallery-item reveal'; // Add reveal class
                         item.innerHTML = `<img src="${imgSrc}" alt="${section.title} - ${project.title}">`;
                         grid.appendChild(item);
                     });
@@ -475,11 +518,30 @@
                 // Fallback for simple image list
                 project.images.forEach(imgSrc => {
                     const item = document.createElement('div');
-                    item.className = 'gallery-item';
+                    item.className = 'gallery-item reveal'; // Add reveal class
                     item.innerHTML = `<img src="${imgSrc}" alt="${project.title}">`;
                     defaultGrid.appendChild(item);
                 });
             }
+
+            // Initialize Intersection Observer for Reveal Effect
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.reveal').forEach(el => {
+                observer.observe(el);
+            });
 
         } else {
             document.getElementById('project-title').textContent = 'Project Not Found';
