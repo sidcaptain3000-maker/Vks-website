@@ -242,8 +242,14 @@
         }
 
         .project-tagline-text {
-            display: none;
-            /* Hide old tagline rules if present */
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.65rem;
+            color: #555;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 2px;
+            font-weight: 500;
         }
 
         .logo-icon {
@@ -277,8 +283,11 @@
         <div class="nav-container nav-full">
             <a href="index.html" class="logo-group" style="flex-direction: row; align-items: center;">
                 <img src="assets/vks_logo_icon.png" alt="Logo" class="logo-icon">
-                <div class="logo-main project-logo-text">
-                    <span class="text-vks">VKS</span>
+                <div style="display: flex; flex-direction: column; justify-content: center;">
+                    <div class="logo-main project-logo-text">
+                        <span class="text-vks">VKS</span>
+                    </div>
+                    <div class="project-tagline-text">Blueprints to Brilliance</div>
                 </div>
             </a>
             <ul class="nav-links">
