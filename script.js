@@ -32,18 +32,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Navbar Scroll Effect
+    // Navbar Scroll Effect - Sticky Update
     const navbar = document.querySelector('.navbar');
-    window.addEventListener('scroll', () => {
+
+    const updateNavbar = () => {
         if (window.scrollY > 50) {
-            navbar.style.padding = '15px 0';
-            navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-            navbar.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.1)';
+            navbar.classList.add('scrolled');
         } else {
-            navbar.style.padding = '20px 0';
-            navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-            navbar.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.05)';
+            navbar.classList.remove('scrolled');
         }
-    });
+    };
+
+    window.addEventListener('scroll', updateNavbar);
+    // Initial check
+    updateNavbar();
 
     // Smooth Scroll for Anchor Links (Polyfill-like behavior for older browsers if needed, but CSS scroll-behavior usually handles it)
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -162,6 +164,96 @@ document.addEventListener('DOMContentLoaded', () => {
                 submitBtn.textContent = originalBtnText;
                 submitBtn.disabled = false;
             }
+        });
+    }
+
+    // --- New Dynamic Features (Stitch Suggestion) ---
+
+    // 1. Stats Count Up Animation
+    function initStatsCounter() {
+        const stats = document.querySelectorAll('.stat-card h3');
+        if (stats.length === 0) return;
+
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = entry.target;
+                    const fullText = target.innerText;
+                    const hasPlus = fullText.includes('+');
+                    const hasPercent = fullText.includes('%');
+                    const endValue = parseInt(fullText.replace(/[^0-9]/g, ''));
+
+                    let startTimestamp = null;
+                    const duration = 2000; // 2 seconds
+
+                    const step = (timestamp) => {
+                        if (!startTimestamp) startTimestamp = timestamp;
+                        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+
+                        // Easing function for smooth count
+                        const easeOutQuad = 1 - (1 - progress) * (1 - progress);
+
+                        const currentVal = Math.floor(easeOutQuad * endValue);
+
+                        let suffix = '';
+                        if (hasPlus) suffix = '+';
+                        if (hasPercent) suffix = '%';
+
+                        target.innerText = currentVal + suffix;
+
+                        if (progress < 1) {
+                            window.requestAnimationFrame(step);
+                        } else {
+                            target.innerText = fullText; // Ensure exact final state
+                        }
+                    };
+
+                    window.requestAnimationFrame(step);
+                    obs.unobserve(target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        stats.forEach(stat => observer.observe(stat));
+    }
+    initStatsCounter();
+
+    // 2. Magnetic Button Effect for Hero
+    const magneticBtn = document.querySelector('.hero-btns .btn-primary');
+    if (magneticBtn) {
+        magneticBtn.addEventListener('mousemove', (e) => {
+            const rect = magneticBtn.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            // Magnetic pull strength
+            magneticBtn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px) scale(1.05)`;
+        });
+
+        magneticBtn.addEventListener('mouseleave', () => {
+            // Reset position
+            magneticBtn.style.transform = 'translate(0, 0) scale(1)';
+            // Note: transition in CSS handles the smooth return
+        });
+    }
+
+
+    // 3. Portfolio Parallax (Muted for performance, using background position)
+    const portfolioImages = document.querySelectorAll('.portfolio-item .portfolio-img');
+    if (portfolioImages.length > 0) {
+        window.addEventListener('scroll', () => {
+            portfolioImages.forEach((img, index) => {
+                // Apply parallax only to every second item for variation
+                if (index % 2 !== 0) {
+                    const speed = 0.03;
+                    const rect = img.parentElement.getBoundingClientRect();
+                    // Check if in view
+                    if (rect.top < window.innerHeight && rect.bottom > 0) {
+                        const offset = (window.innerHeight - rect.top) * speed;
+                        img.style.backgroundPosition = `center calc(50% + ${offset}px)`;
+                    }
+                }
+            });
         });
     }
 });

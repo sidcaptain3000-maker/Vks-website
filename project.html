@@ -7,7 +7,7 @@
     <title>Project Details | VKS Organization</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="assets/vks_logo_icon.png">
+    <link rel="icon" type="image/png" href="assets/vks_logo_v3.png">
 
     <!-- Social Media Tags -->
     <meta property="og:title" content="VKS Projects | Blueprints to Brilliance">
@@ -117,6 +117,7 @@
         }
 
         /* Lightbox Styles */
+        /* Immersive Lightbox */
         .lightbox {
             display: none;
             position: fixed;
@@ -124,10 +125,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
+            background: rgba(10, 10, 10, 0.98);
+            /* Deep charcoal */
             z-index: 10000;
             justify-content: center;
             align-items: center;
+            backdrop-filter: blur(8px);
         }
 
         .lightbox.active {
@@ -135,19 +138,137 @@
         }
 
         .lightbox-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+        }
+
+        .lightbox-img-wrapper {
             position: relative;
             max-width: 90%;
-            max-height: 90%;
-            overflow: hidden;
+            max-height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeZoom 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+
+        @keyframes fadeZoom {
+            from {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         .lightbox-image {
             max-width: 100%;
-            max-height: 90vh;
+            max-height: 80vh;
             object-fit: contain;
-            transition: transform 0.3s ease;
+            border-radius: 4px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
             transform-origin: center center;
+            transition: transform 0.3s ease;
         }
+
+        /* Logo-Driven Controls */
+        .lightbox-close {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: var(--accent-color);
+            /* VKS Red */
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            z-index: 10002;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            line-height: 0;
+            padding-bottom: 4px;
+        }
+
+        .lightbox-close:hover {
+            transform: rotate(90deg) scale(1.1);
+            background: #b01b23;
+        }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 14px;
+            cursor: pointer;
+            font-size: 24px;
+            transition: all 0.3s ease;
+            z-index: 10001;
+            border-radius: 4px;
+        }
+
+        .lightbox-nav:hover {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .lightbox-prev {
+            left: 30px;
+        }
+
+        .lightbox-next {
+            right: 30px;
+        }
+
+        /* Contextual Caption */
+        .lightbox-caption-box {
+            text-align: center;
+            margin-top: 25px;
+            color: white;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .lightbox-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+            color: #fff;
+        }
+
+        .lightbox-desc {
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            color: #ccc;
+            font-weight: 400;
+            max-width: 600px;
+            margin: 0 auto;
+            letter-spacing: 0.3px;
+        }
+
+        /* Hidden Controls but kept for logic if needed */
+        .lightbox-controls {
+            display: none;
+        }
+
 
         /* Scroll Reveal Animation */
         .reveal {
@@ -159,80 +280,6 @@
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
-        }
-
-        .lightbox-close {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            font-size: 40px;
-            color: white;
-            cursor: pointer;
-            z-index: 10001;
-            background: rgba(0, 0, 0, 0.5);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            line-height: 1;
-        }
-
-        .lightbox-close:hover {
-            background: rgba(0, 0, 0, 0.8);
-        }
-
-        .lightbox-controls {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 15px;
-            z-index: 10001;
-        }
-
-        .lightbox-btn {
-            background: rgba(255, 255, 255, 0.9);
-            border: none;
-            padding: 12px 20px;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 5px;
-            transition: background 0.3s ease;
-            font-weight: 600;
-        }
-
-        .lightbox-btn:hover {
-            background: white;
-        }
-
-        .lightbox-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.9);
-            border: none;
-            padding: 20px 15px;
-            cursor: pointer;
-            font-size: 24px;
-            border-radius: 5px;
-            transition: background 0.3s ease;
-            font-weight: bold;
-            z-index: 10001;
-        }
-
-        .lightbox-nav:hover {
-            background: white;
-        }
-
-        .lightbox-prev {
-            left: 30px;
-        }
-
-        .lightbox-next {
-            right: 30px;
         }
 
         .project-logo-text {
@@ -254,11 +301,9 @@
 
         .logo-icon {
             height: 100px;
-            /* Increased to 100px */
             width: auto;
             margin-right: 15px;
-            mix-blend-mode: multiply;
-            /* Make white background transparent */
+            /* Using user provided logo v3 */
         }
 
         .nav-home-icon {
@@ -282,7 +327,7 @@
     <nav class="navbar">
         <div class="nav-container nav-full">
             <a href="index.html" class="logo-group" style="flex-direction: row; align-items: center;">
-                <img src="assets/vks_logo_icon.png" alt="Logo" class="logo-icon">
+                <img src="assets/vks_logo_v3.png" alt="Logo" class="logo-icon">
                 <div style="display: flex; flex-direction: column; justify-content: center;">
                     <div class="logo-main project-logo-text">
                         <span class="text-vks">VKS</span>
@@ -315,17 +360,29 @@
 
     <!-- Lightbox Modal -->
     <div class="lightbox" id="lightbox">
-        <span class="lightbox-close" id="lightbox-close">&times;</span>
-        <button class="lightbox-nav lightbox-prev" id="lightbox-prev">&lt;</button>
-        <button class="lightbox-nav lightbox-next" id="lightbox-next">&gt;</button>
+        <button class="lightbox-close" id="lightbox-close">&times;</button>
+        <button class="lightbox-nav lightbox-prev" id="lightbox-prev">&#10094;</button>
+        <button class="lightbox-nav lightbox-next" id="lightbox-next">&#10095;</button>
+
         <div class="lightbox-content">
-            <img src="" alt="" class="lightbox-image" id="lightbox-image">
+            <div class="lightbox-img-wrapper">
+                <img src="" alt="" class="lightbox-image" id="lightbox-image">
+            </div>
+
+            <!-- Contextual Storytelling -->
+            <div class="lightbox-caption-box">
+                <h4 class="lightbox-title" id="lightbox-title"></h4>
+                <p class="lightbox-desc" id="lightbox-desc"></p>
+            </div>
         </div>
-        <div class="lightbox-controls">
-            <button class="lightbox-btn" id="zoom-in">Zoom In (+)</button>
-            <button class="lightbox-btn" id="zoom-out">Zoom Out (-)</button>
+
+        <!-- Controls handled via mouse/touch, keeping elements hidden for JS compatibility -->
+        <div class="lightbox-controls" style="display:none">
+            <button class="lightbox-btn" id="zoom-in">+</button>
+            <button class="lightbox-btn" id="zoom-out">-</button>
             <button class="lightbox-btn" id="reset-zoom">Reset</button>
         </div>
+        <div id="zoom-indicator" class="zoom-indicator"></div>
     </div>
 
     <!-- Footer -->
@@ -593,9 +650,13 @@
         }
 
         // Collect all images after they're loaded
+        // Collect all images after they're loaded
         setTimeout(() => {
             const galleryItems = document.querySelectorAll('.gallery-item img');
-            allImages = Array.from(galleryItems).map(img => img.src);
+            allImages = Array.from(galleryItems).map(img => ({
+                src: img.src,
+                alt: img.alt || 'Project Detail'
+            }));
 
             // Add click event to all gallery items
             galleryItems.forEach((img, index) => {
@@ -608,33 +669,48 @@
         function openLightbox(index) {
             currentImageIndex = index;
             currentZoom = 1;
-            lightboxImage.src = allImages[index];
-            lightboxImage.style.transform = `scale(${currentZoom})`;
+            updateLightboxContent();
             lightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
+        }
+
+        function updateLightboxContent() {
+            const imgData = allImages[currentImageIndex];
+            lightboxImage.src = imgData.src;
+            lightboxImage.style.transform = `scale(${currentZoom})`;
+
+            // Contextual Storytelling Logic
+            const titleElem = document.getElementById('lightbox-title');
+            const descElem = document.getElementById('lightbox-desc');
+
+            // Alt format is usually "Section Title - Project Title"
+            const parts = imgData.alt.split(' - ');
+            if (parts.length > 1) {
+                titleElem.textContent = parts[0]; // e.g. "Cabin Entrance"
+                descElem.textContent = parts[1];  // e.g. "WCL CMD Cabin"
+            } else {
+                titleElem.textContent = imgData.alt;
+                descElem.textContent = '';
+            }
         }
 
         function closeLightbox() {
             lightbox.classList.remove('active');
             document.body.style.overflow = 'auto';
             currentZoom = 1;
-            zoomIndicator.classList.remove('show');
+            if (typeof zoomIndicator !== 'undefined') zoomIndicator.classList.remove('show');
         }
 
         function showPrevImage() {
             currentImageIndex = (currentImageIndex - 1 + allImages.length) % allImages.length;
-            lightboxImage.src = allImages[currentImageIndex];
-            currentZoom = 1;
-            lightboxImage.style.transform = `scale(${currentZoom})`;
-            zoomIndicator.classList.remove('show');
+            updateLightboxContent();
+            if (typeof zoomIndicator !== 'undefined') zoomIndicator.classList.remove('show');
         }
 
         function showNextImage() {
             currentImageIndex = (currentImageIndex + 1) % allImages.length;
-            lightboxImage.src = allImages[currentImageIndex];
-            currentZoom = 1;
-            lightboxImage.style.transform = `scale(${currentZoom})`;
-            zoomIndicator.classList.remove('show');
+            updateLightboxContent();
+            if (typeof zoomIndicator !== 'undefined') zoomIndicator.classList.remove('show');
         }
 
         function zoomIn() {
