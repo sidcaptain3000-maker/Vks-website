@@ -43,6 +43,28 @@ body {
     overflow-x: hidden;
 }
 
+/* ===== RESPONSIVE BACKGROUND FOR MOBILE & TABLET ===== */
+/* Tablet: Fade blueprint to 92% white overlay */
+@media (max-width: 1024px) {
+    body {
+        background-image:
+            linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)),
+            url('assets/blueprint_hero.jpg');
+        background-attachment: scroll;
+        /* Remove parallax for performance */
+    }
+}
+
+/* Mobile: Nearly invisible blueprint (96% white) for clean readability */
+@media (max-width: 768px) {
+    body {
+        background-image:
+            linear-gradient(rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.96)),
+            url('assets/blueprint_hero.jpg');
+        background-attachment: scroll;
+    }
+}
+
 h1,
 h2,
 h3,
