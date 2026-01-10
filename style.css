@@ -109,6 +109,32 @@ body {
 
 
 
+/* Image Protection & Security */
+.img-protected {
+    pointer-events: none;
+    /* Prevents dragging and right-click on the image itself */
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+/* Print Protection: Hides project images if someone tries to print the page */
+@media print {
+
+    .gallery-item,
+    .lightbox-content,
+    .portfolio-item {
+        display: none !important;
+    }
+
+    body::after {
+        content: "Copyright VKS Organization. Digital reproduction prohibited.";
+        display: block;
+        text-align: center;
+        font-size: 20px;
+        margin-top: 50px;
+    }
+}
+
 h1,
 h2,
 h3,
