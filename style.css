@@ -44,26 +44,70 @@ body {
 }
 
 /* ===== RESPONSIVE BACKGROUND FOR MOBILE & TABLET ===== */
-/* Tablet: Fade blueprint to 92% white overlay */
+/* Tablet: Switch to lightweight grid pattern */
 @media (max-width: 1024px) {
     body {
+        background-color: #fafafa;
         background-image:
-            linear-gradient(rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.92)),
-            url('assets/blueprint_hero.jpg');
+            linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+        background-size: 40px 40px;
         background-attachment: scroll;
-        /* Remove parallax for performance */
+        background-position: 0 0;
     }
 }
 
-/* Mobile: Nearly invisible blueprint (96% white) for clean readability */
+/* Mobile: Use original blueprint but with more detail visibility */
 @media (max-width: 768px) {
     body {
+        background-color: #ffffff;
         background-image:
-            linear-gradient(rgba(255, 255, 255, 0.96), rgba(255, 255, 255, 0.96)),
+            linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
             url('assets/blueprint_hero.jpg');
+        background-size: cover;
         background-attachment: scroll;
+        background-position: center;
     }
 }
+
+/* Global Watermark System */
+.with-watermark {
+    position: relative;
+    overflow: hidden;
+}
+
+.with-watermark::after {
+    content: '';
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    width: 60px;
+    height: 60px;
+    background-image: url('assets/vks_logo_v3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: 5;
+    transition: all 0.3s ease;
+}
+
+/* Grayscale variant for Main Portfolio */
+.watermark-gray::after {
+    filter: grayscale(1) brightness(1.1);
+}
+
+/* Colored variant for Project Gallery */
+.watermark-color::after {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    opacity: 0.4;
+}
+
+.with-watermark:hover::after {
+    opacity: 0.7;
+}
+
+
 
 h1,
 h2,

@@ -365,7 +365,7 @@
         <button class="lightbox-nav lightbox-next" id="lightbox-next">&#10095;</button>
 
         <div class="lightbox-content">
-            <div class="lightbox-img-wrapper">
+            <div class="lightbox-img-wrapper with-watermark watermark-color">
                 <img src="" alt="" class="lightbox-image" id="lightbox-image">
             </div>
 
@@ -582,7 +582,7 @@
 
                     section.images.forEach(imgSrc => {
                         const item = document.createElement('div');
-                        item.className = 'gallery-item reveal'; // Add reveal class
+                        item.className = 'gallery-item reveal with-watermark watermark-color'; // Add colored watermark class
                         item.innerHTML = `<img src="${imgSrc}" alt="${section.title} - ${project.title}">`;
                         grid.appendChild(item);
                     });
@@ -594,7 +594,7 @@
                 // Fallback for simple image list
                 project.images.forEach(imgSrc => {
                     const item = document.createElement('div');
-                    item.className = 'gallery-item reveal'; // Add reveal class
+                    item.className = 'gallery-item reveal with-watermark watermark-color'; // Add colored watermark class
                     item.innerHTML = `<img src="${imgSrc}" alt="${project.title}">`;
                     defaultGrid.appendChild(item);
                 });
