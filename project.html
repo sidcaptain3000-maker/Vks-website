@@ -66,6 +66,17 @@
             margin-top: 0;
         }
 
+        .gallery-section-subtitle {
+            font-family: var(--font-body);
+            font-size: 1.3rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            text-align: center;
+            margin-top: -20px;
+            margin-bottom: 30px;
+            opacity: 0.85;
+        }
+
         .gallery-grid {
             display: flex;
             flex-wrap: wrap;
@@ -76,10 +87,23 @@
         .gallery-item {
             flex: 0 0 calc((100% - 60px) / 3);
             max-width: calc((100% - 60px) / 3);
-            height: 400px;
-            overflow: hidden;
-            border-radius: 4px;
+            /* height: 400px; Remove fixed height for uncropped look */
             position: relative;
+            margin-bottom: 30px;
+            overflow: visible;
+            /* Essential: Allow tooltips to pop out */
+        }
+
+        .gallery-img-container {
+            position: relative;
+            overflow: hidden;
+            /* Keep zoom inside this container */
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: #fff;
+            width: 100%;
+            height: 400px;
+            /* Keep uniform height as requested for 'uniform layout' */
         }
 
         /* Tablet Responsive */
@@ -100,20 +124,158 @@
             }
         }
 
-        .gallery-item img {
+        .gallery-img-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
-            transition: transform 0.5s ease;
+            transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
 
-        .gallery-item:hover img {
-            transform: scale(1.05);
+        .gallery-item:hover .gallery-img-container img {
+            transform: scale(1.08);
         }
 
         .gallery-item {
             cursor: pointer;
+        }
+
+        /* Hotspot Styling */
+        .hotspot-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            /* Allow clicks through to gallery item if needed */
+            z-index: 15;
+        }
+
+        .hotspot-dot {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--accent-color);
+            border: 1.5px solid white;
+            border-radius: 50%;
+            cursor: help;
+            pointer-events: auto;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        /* Essential for Mobile: Increase tappable area without increasing visual size */
+        .hotspot-dot::before {
+            content: '';
+            position: absolute;
+            top: -15px;
+            left: -15px;
+            right: -15px;
+            bottom: -15px;
+            background: transparent;
+            z-index: 10;
+        }
+
+        .hotspot-dot::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-color);
+            animation: pulse-hotspot 2s infinite;
+        }
+
+        @keyframes pulse-hotspot {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(3);
+                opacity: 0;
+            }
+        }
+
+        .hotspot-dot:hover {
+            transform: translate(-50%, -50%) scale(1.3);
+            z-index: 20;
+        }
+
+        .hotspot-tooltip {
+            position: absolute;
+            background: rgba(26, 26, 26, 0.95);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            width: max-content;
+            max-width: 280px;
+            text-align: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            pointer-events: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 21;
+            line-height: 1.5;
+            /* Default transform to sit ABOVE the dot */
+            transform: translate(-50%, -100%) translateY(-15px);
+        }
+
+        /* Logic to show tooltip when dot is hovered/active */
+        /* Since tooltip is now a sibling, we use the sibling selector in JS or just keep it simple */
+        .hotspot-tooltip.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -100%) translateY(-20px);
+        }
+
+        .hotspot-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: rgba(26, 26, 26, 0.95) transparent transparent transparent;
+        }
+
+        /* Tablet & Mobile: Bottom Bar Style */
+        @media (max-width: 1024px) {
+            .hotspot-tooltip {
+                left: 0 !important;
+                right: 0 !important;
+                bottom: 0 !important;
+                top: auto !important;
+                width: 100% !important;
+                max-width: none !important;
+                transform: translateY(100%) !important;
+                border-radius: 0;
+                padding: 15px 20px;
+                background: rgba(26, 26, 26, 0.98);
+                font-size: 0.9rem;
+            }
+
+            .hotspot-tooltip.visible {
+                transform: translateY(0) !important;
+            }
+
+            .hotspot-tooltip::after {
+                display: none;
+            }
+        }
+
+        .hotspot-dot.active {
+            transform: translate(-50%, -50%) scale(1.3);
+            z-index: 25;
         }
 
         /* Lightbox Styles */
@@ -346,6 +508,9 @@
         <div class="container project-hero-content">
             <h1 id="project-title">Loading...</h1>
             <p id="project-category"></p>
+            <p id="project-description"
+                style="margin-top: 15px; font-size: 1rem; color: var(--text-secondary); max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.5;">
+            </p>
         </div>
     </header>
 
@@ -413,13 +578,26 @@
                     {
                         title: 'Exterior',
                         images: [
-                            'assets/baidyanath_ext_seq_1.jpg',
-                            'assets/baidyanath_ext_seq_2.jpg',
+                            {
+                                url: 'assets/baidyanath_ext_seq_1.jpg',
+                                desc: 'Natural Life and Industrial progress!',
+                                hotspots: [
+                                    { x: 55, y: 82, text: 'Natural Life and Industrial progress!' }
+                                ]
+                            },
+                            {
+                                url: 'assets/baidyanath_ext_seq_2.jpg',
+                                desc: 'Green against Grey',
+                                hotspots: [
+                                    { x: 65, y: 88, text: 'Green against Grey' }
+                                ]
+                            },
                             'assets/baidyanath_ext_seq_3.jpg'
                         ]
                     },
                     {
                         title: 'Reception Area',
+                        subtitle: 'A grand reception space crowned by a futuristic dome',
                         images: [
                             'assets/baidyanath_rec_1.jpg',
                             'assets/baidyanath_rec_2.jpg'
@@ -428,20 +606,41 @@
                     {
                         title: 'Work Station & Wall Art',
                         images: [
-                            'assets/baidyanath_work_1.jpg',
-                            'assets/baidyanath_work_2.jpg'
+                            {
+                                url: 'assets/baidyanath_work_1.jpg',
+                                desc: 'Typography - Theme Wall Art',
+                                hotspots: [
+                                    { x: 45, y: 38, text: 'Typography - Theme Wall Art' }
+                                ]
+                            },
+                            {
+                                url: 'assets/baidyanath_work_2.jpg',
+                                desc: 'Corporate Office Identity - Workstations',
+                                hotspots: [
+                                    { x: 40, y: 65, text: 'Corporate Office Identity - Workstations' },
+                                    { x: 42, y: 45, text: 'Glass geometry enhancing spatial flow' }
+                                ]
+                            }
                         ]
                     },
                     {
                         title: 'Conference Room',
                         images: [
                             'assets/baidyanath_conf_1.jpg',
-                            'assets/baidyanath_conf_2.jpg',
+                            {
+                                url: 'assets/baidyanath_conf_2.jpg',
+                                desc: 'Product Display shaped by a heartline form',
+                                hotspots: [
+                                    { x: 55, y: 45, text: 'Product Display shaped by a heartline form' },
+                                    { x: 45, y: 78, text: 'Logo inspired table legs' }
+                                ]
+                            },
                             'assets/baidyanath_conf_3.jpg'
                         ]
                     },
                     {
                         title: 'Cabins and Meetout area',
+                        subtitle: "Director's Chamber - Strength in Simplicity and a meetout area - a lively interaction zone.",
                         images: [
                             'assets/baidyanath_cabin_2.jpg',
                             'assets/baidyanath_cabin_3.jpg',
@@ -450,6 +649,7 @@
                     },
                     {
                         title: 'Guest Canteen Area',
+                        subtitle: 'Varied seatings, vibrant dining',
                         images: [
                             'assets/baidyanath_canteen_1.jpg',
                             'assets/baidyanath_canteen_2.jpg',
@@ -467,50 +667,57 @@
                 ]
             },
             'wcl': {
-                title: 'WCL CMD Cabin',
-                category: 'Executive Boardroom',
+                title: 'WCL Headquarters',
+                category: 'CMD Cabin',
+                description: 'When the project came to VKS, the space was conventional, compartmental and non-technical with no technology integration',
                 sections: [
                     {
                         title: 'Entrance and Passage',
                         images: [
-                            'assets/wcl_cabin_1.jpg',
-                            'assets/wcl_cabin_2.jpg',
-                            'assets/wcl_cabin_3.jpg'
+                            {
+                                url: 'assets/wcl_cabin_1.jpg',
+                                desc: 'Wall surfaces form fluidly interacting with lights',
+                                hotspots: [
+                                    { x: 33.2, y: 53.5, text: 'Wall surfaces form fluidly interacting with lights' }
+                                ]
+                            },
+                            { url: 'assets/wcl_cabin_2.jpg', desc: 'Logo placements on Wall and ceiling leading the path to CMD chamber.' },
+                            { url: 'assets/wcl_cabin_3.jpg', desc: 'Logo placements on Wall and ceiling leading the path to CMD chamber.' }
                         ]
                     },
                     {
                         title: 'Cabin Entrance',
                         images: [
-                            'assets/wcl_cabin_entrance_1.jpg',
-                            'assets/wcl_cabin_entrance_2.jpg'
+                            { url: 'assets/wcl_cabin_entrance_1.jpg', desc: 'The CMD Chamber, defined by quiet authority, neo-classical symmetrical in-sitting zones' },
+                            { url: 'assets/wcl_cabin_entrance_2.jpg', desc: 'A defining waterfall for the masterspace' }
                         ]
                     },
                     {
                         title: 'Personalised Seating',
                         images: [
-                            'assets/wcl_seating_1.jpg',
-                            'assets/wcl_seating_2.jpg',
-                            'assets/wcl_seating_3.jpg'
+                            { url: 'assets/wcl_seating_1.jpg', desc: 'Executive lounge area with premium leather upholstery and ergonomic design.' },
+                            { url: 'assets/wcl_seating_2.jpg', desc: 'Custom side tables with integrated charging ports and smart controls.' },
+                            { url: 'assets/wcl_seating_3.jpg', desc: 'Detailing of the premium fabric selection for the executive sofa.' }
                         ]
                     },
                     {
                         title: 'CMD Personal Conference',
                         images: [
-                            'assets/wcl_conf_2.jpg',
-                            'assets/wcl_conf_3.jpg',
-                            'assets/wcl_conf_4.jpg',
-                            'assets/wcl_conf_5.jpg',
-                            'assets/wcl_conf_6.jpg'
+                            { url: 'assets/wcl_conf_2.jpg', desc: 'Integrated state-of-the-art video conferencing hardware for global connectivity.' },
+                            { url: 'assets/wcl_conf_3.jpg', desc: 'Automated lighting and climate control systems for the conference zone.' },
+                            { url: 'assets/wcl_conf_4.jpg', desc: 'Seamless wireless presentation capability embedded in the conference table.' },
+                            { url: 'assets/wcl_conf_5.jpg', desc: 'Acoustic wall paneling designed to ensure absolute confidentiality.' },
+                            { url: 'assets/wcl_conf_6.jpg', desc: 'Hidden cabling systems maintaining the clean, non-cluttered aesthetic.' }
                         ]
                     },
                     {
                         title: 'CMD Seating',
                         images: [
-                            'assets/wcl_cmd_seating_4.jpg',
-                            'assets/wcl_cmd_seating_5.jpg',
-                            'assets/wcl_cmd_seating_1.jpg',
-                            'assets/wcl_cmd_seating_2.jpg',
-                            'assets/wcl_cmd_seating_3.jpg'
+                            { url: 'assets/wcl_cmd_seating_4.jpg', desc: 'Primary CMD workstation featuring a massive solid wood executive desk.' },
+                            { url: 'assets/wcl_cmd_seating_5.jpg', desc: 'Panoramic view of the office layout from the CMD desk.' },
+                            { url: 'assets/wcl_cmd_seating_1.jpg', desc: 'Secondary seating for private high-level discussions.' },
+                            { url: 'assets/wcl_cmd_seating_2.jpg', desc: 'Smart storage solutions hidden within the wood veneers.' },
+                            { url: 'assets/wcl_cmd_seating_3.jpg', desc: 'Final overview showing the transition from conventional to technical brilliance.' }
                         ]
                     }
                 ]
@@ -562,6 +769,12 @@
             const project = projectsData[projectId];
             document.getElementById('project-title').textContent = project.title;
             document.getElementById('project-category').textContent = project.category;
+            const descElem = document.getElementById('project-description');
+            if (project.description) {
+                descElem.textContent = project.description;
+            } else {
+                descElem.style.display = 'none';
+            }
 
             const galleryContainer = document.getElementById('gallery-container');
             const defaultGrid = document.getElementById('gallery-grid');
@@ -577,15 +790,87 @@
                     title.textContent = section.title;
                     galleryContainer.appendChild(title);
 
+                    // Add Section Subtitle if present
+                    if (section.subtitle) {
+                        const subtitle = document.createElement('p');
+                        subtitle.className = 'gallery-section-subtitle';
+                        subtitle.textContent = section.subtitle;
+                        galleryContainer.appendChild(subtitle);
+                    }
+
                     // Create Grid for this section
                     const grid = document.createElement('div');
                     grid.className = 'gallery-grid';
                     // grid.style.gridTemplateColumns = `repeat(${section.images.length}, 1fr)`; // Removed to use CSS default
 
-                    section.images.forEach(imgSrc => {
+                    section.images.forEach(imgData => {
+                        const imgSrc = typeof imgData === 'string' ? imgData : imgData.url;
+                        const imgDesc = typeof imgData === 'object' ? imgData.desc : '';
+
                         const item = document.createElement('div');
-                        item.className = 'gallery-item reveal with-watermark watermark-color'; // Add colored watermark class
-                        item.innerHTML = `<img src="${imgSrc}" alt="${section.title} - ${project.title}">`;
+                        item.className = 'gallery-item reveal with-watermark watermark-color';
+                        item.innerHTML = `
+                            <div class="gallery-img-container">
+                                <img src="${imgSrc}" alt="${section.title} - ${project.title}" data-description="${imgDesc}" class="img-protected">
+                                <div class="security-shield" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;"></div>
+                            </div>
+                            <div class="hotspot-container"></div>
+                        `;
+
+                        // Add Hotspots if they exist
+                        if (imgData.hotspots && Array.isArray(imgData.hotspots)) {
+                            const hotspotContainer = item.querySelector('.hotspot-container');
+                            imgData.hotspots.forEach(hs => {
+                                const dot = document.createElement('div');
+                                dot.className = 'hotspot-dot';
+                                dot.style.left = hs.x + '%';
+                                dot.style.top = hs.y + '%';
+
+                                // Tooltip (now a sibling in the container for layout freedom)
+                                const tooltip = document.createElement('div');
+                                tooltip.className = 'hotspot-tooltip';
+                                tooltip.textContent = hs.text;
+
+                                // Position tooltip relative to the dot's X and Y
+                                tooltip.style.left = hs.x + '%';
+                                tooltip.style.top = hs.y + '%'; // Align with dot by default
+                                tooltip.style.bottom = 'auto'; // Disable the bottom: 25px default for desktop
+
+                                hotspotContainer.appendChild(dot);
+                                hotspotContainer.appendChild(tooltip);
+
+                                // Hover triggers (Desktop)
+                                dot.addEventListener('mouseenter', () => tooltip.classList.add('visible'));
+                                dot.addEventListener('mouseleave', () => {
+                                    if (!dot.classList.contains('active')) tooltip.classList.remove('visible');
+                                });
+
+                                // Click/Tap logic (Mobile & Desktop)
+                                dot.addEventListener('click', (e) => {
+                                    e.stopPropagation();
+
+                                    const isActive = dot.classList.contains('active');
+
+                                    // Close all in this image
+                                    item.querySelectorAll('.hotspot-dot').forEach(d => d.classList.remove('active'));
+                                    item.querySelectorAll('.hotspot-tooltip').forEach(t => t.classList.remove('visible'));
+
+                                    if (!isActive) {
+                                        dot.classList.add('active');
+                                        tooltip.classList.add('visible');
+                                    }
+                                });
+                            });
+                        }
+
+                        // Close hotspots when clicking elsewhere
+                        item.addEventListener('click', (e) => {
+                            if (!e.target.closest('.hotspot-dot')) {
+                                item.querySelectorAll('.hotspot-dot').forEach(d => d.classList.remove('active'));
+                                item.querySelectorAll('.hotspot-tooltip').forEach(t => t.classList.remove('visible'));
+                            }
+                        });
+
                         grid.appendChild(item);
                     });
 
@@ -594,10 +879,16 @@
 
             } else if (project.images) {
                 // Fallback for simple image list
-                project.images.forEach(imgSrc => {
+                project.images.forEach(imgData => {
+                    const imgSrc = typeof imgData === 'string' ? imgData : imgData.url;
+                    const imgDesc = typeof imgData === 'object' ? imgData.desc : '';
+
                     const item = document.createElement('div');
-                    item.className = 'gallery-item reveal with-watermark watermark-color'; // Add colored watermark class
-                    item.innerHTML = `<img src="${imgSrc}" alt="${project.title}">`;
+                    item.className = 'gallery-item reveal with-watermark watermark-color';
+                    item.innerHTML = `
+                        <img src="${imgSrc}" alt="${project.title}" data-description="${imgDesc}" class="img-protected">
+                        <div class="security-shield" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10;"></div>
+                    `;
                     defaultGrid.appendChild(item);
                 });
             }
@@ -657,7 +948,8 @@
             const galleryItems = document.querySelectorAll('.gallery-item img');
             allImages = Array.from(galleryItems).map(img => ({
                 src: img.src,
-                alt: img.alt || 'Project Detail'
+                alt: img.alt || 'Project Detail',
+                description: img.getAttribute('data-description') || ''
             }));
 
             // Add click event to all gallery items
@@ -689,10 +981,11 @@
             const parts = imgData.alt.split(' - ');
             if (parts.length > 1) {
                 titleElem.textContent = parts[0]; // e.g. "Cabin Entrance"
-                descElem.textContent = parts[1];  // e.g. "WCL CMD Cabin"
+                // Use image description if exists, else project title
+                descElem.textContent = imgData.description || parts[1];
             } else {
                 titleElem.textContent = imgData.alt;
-                descElem.textContent = '';
+                descElem.textContent = imgData.description || '';
             }
         }
 

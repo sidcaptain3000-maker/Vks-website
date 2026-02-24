@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Staggered Animations for Grids
-    const grids = document.querySelectorAll('.services-grid, .portfolio-grid, .gallery-grid');
+    const grids = document.querySelectorAll('.services-grid, .portfolio-grid, .gallery-grid, .testimonials-grid');
     grids.forEach(grid => {
         const items = grid.children;
         Array.from(items).forEach((item, index) => {
@@ -256,4 +256,30 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+
+    // 4. Image Protection Globally
+    // Intercepts Right-Click
+    document.addEventListener('contextmenu', (e) => {
+        if (e.target.tagName === 'IMG' || e.target.closest('.with-watermark') || e.target.closest('.portfolio-img')) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // Intercepts Image Dragging
+    document.addEventListener('dragstart', (e) => {
+        if (e.target.tagName === 'IMG' || e.target.closest('.portfolio-img')) {
+            e.preventDefault();
+        }
+    });
+
+    // Intercepts standard Save/Print keys (psychological deterrent)
+    document.addEventListener('keydown', (e) => {
+        // Blocks Ctrl+S, Ctrl+P, Ctrl+U (View Source)
+        if (e.ctrlKey && (e.key === 's' || e.key === 'p' || e.key === 'u')) {
+            e.preventDefault();
+        }
+    });
+
+    // CSS Marquee handles testimonial animation now.
 });
